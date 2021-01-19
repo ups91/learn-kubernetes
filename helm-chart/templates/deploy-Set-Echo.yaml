@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-echo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      lbl: myEcho
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        lbl: myEcho
+    spec:
+      containers:
+        - image:  ups91/kube-test-pods:echo
+          imagePullPolicy: Always
+          env:
+            - name: WORLD_NAME
+              value: "NEW comer from ENV variable"
+            - name: SECRET_key
+              valueFrom:
+                secretKeyRef:
+                  name: env-secret
+                  key: key
+            - name: SECRET_value
+              valueFrom:
+                secretKeyRef:
+                  name: env-secret
+                  key: value
+          name: echo
+          ports:
+            - containerPort: 8001
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "128Mi"

@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-colorer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      lbl: myColor
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        lbl: myColor
+    spec:
+      containers:
+        - image: ups91/kube-test-pods:colorer
+          imagePullPolicy: Always
+          name: colorer
+          ports:
+            - containerPort: 8003
+          readinessProbe:
+            tcpSocket:
+              port: 8003
+            initialDelaySeconds: 50
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8003
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "32Mi"

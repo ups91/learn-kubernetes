@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-colorer
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8003
+      protocol: TCP
+      targetPort: 8003
+  selector:
+    lbl: myColor

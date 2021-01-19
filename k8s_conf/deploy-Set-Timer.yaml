@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-timer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      lbl: myTime
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        lbl: myTime
+    spec:
+      containers:
+        - image: ups91/kube-test-pods:timer
+          imagePullPolicy: Always
+          name: timer
+          livenessProbe:
+            httpGet:
+              path: /timer
+              port: 8002
+            initialDelaySeconds: 33
+            periodSeconds: 5
+          ports:
+            - containerPort: 8002
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "32Mi"

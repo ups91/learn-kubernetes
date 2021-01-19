@@ -1,0 +1,17 @@
+vendor
+bin
+_output
+
+# Test binary, build with `go test -c`
+*.test
+*.out
+
+# editor and IDE paraphernalia
+.idea/
+*.so
+*.swp
+*.swo
+_book
+.history/
+.vscode/
+

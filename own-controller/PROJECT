@@ -1,0 +1,7 @@
+domain: echo.com
+repo: probe/own-controller
+resources:
+- group: webapp
+  kind: Guestbook
+  version: v1
+version: "2"
