@@ -10,14 +10,17 @@ spec:
       lbl: myEcho
   strategy:
     rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
+      maxSurge: 11
+      maxUnavailable: 999
     type: RollingUpdate
   template:
     metadata:
       labels:
         lbl: myEcho
     spec:
+      volumes:
+        - name: d-emptydir
+          emptyDir: {}
       containers:
         - image: ups91/kube-test-pods:echo
           imagePullPolicy: Always
@@ -46,3 +49,6 @@ spec:
             limits:
               cpu: "200m"
               memory: "128Mi"
+          volumeMounts:
+            - mountPath: /d
+              name: d-emptydir

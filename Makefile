@@ -11,18 +11,24 @@ docker:
 	rm -rf ./echo/linux
 	cd ./echo;\
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ./linux/echo_linux.so ;\
+	mkdir ./linux/d ;\
+	chmod 777 ./linux/d ;\
 	docker build -f ./Dockerfile -t ups91/kube-test-pods:echo --no-cache --force-rm ./linux/ ;\
 	docker push  ups91/kube-test-pods:echo
 	
 	rm -rf ./timer/linux
 	cd ./timer;\
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ./linux/timer_linux.so ;\
+	mkdir ./linux/d ;\
+	chmod 777 ./linux/d ;\
 	docker build -f ./Dockerfile -t ups91/kube-test-pods:timer --no-cache --force-rm ./linux/ ;\
 	docker push  ups91/kube-test-pods:timer
 	
 	rm -rf ./colorer/linux
 	cd ./colorer;\
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ./linux/colorer_linux.so ;\
+	mkdir ./linux/d ;\
+	chmod 777 ./linux/d ;\
 	docker build -f ./Dockerfile -t ups91/kube-test-pods:colorer --no-cache --force-rm ./linux/ ;\
 	docker push  ups91/kube-test-pods:colorer
 
@@ -42,18 +48,18 @@ clean:
 	docker image prune -a -f --filter "label=echo"
 	docker image prune -a -f --filter "label=timer"
 	docker image prune -a -f --filter "label=colorer"
-	#docker stop echo_conteiner
-	#docker rm -f echo_conteiner
+	#docker stop echo_contemner
+	#docker rm -f echo_container
 
 .PHONY:k8s-up
 k8s-up:
 	kubectl apply -f ./k8s_conf/namespace.yaml
 
 	#
-	#find out Resourse group
-	#az aks show --resource-group echo_claster --name echo_claster --query nodeResourceGroup -o tsv
+	#find out Resource group
+	#az aks show --resource-group echo_cluster --name echo_cluster --query nodeResourceGroup -o tsv
 	#create static IPs
-	#az network public-ip create --resource-group MC_echo_claster_echo_claster_westeurope --name echo_PublicIP --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv
+	#az network public-ip create --resource-group MC_echo_cluster_echo_cluster_westeurope --name echo_PublicIP --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv
 
 
 
@@ -72,14 +78,10 @@ k8s-up:
 	kubectl apply -f ./k8s_conf/deploy-Set-Echo.yaml  --namespace=$(NAME_SPACE)
 	kubectl apply -f ./k8s_conf/service-echo.yaml     --namespace=$(NAME_SPACE)
 
-	# Add the ingress-nginx repository
-	# Use Helm to deploy an NGINX ingress controller
-	helm install nginx-ingress ingress-nginx/ingress-nginx \
-    --namespace $(NAME_SPACE) \
-    --set controller.replicaCount=1
 
 
-	kubectl apply -f ./k8s_conf/ingress-ngx.yaml --namespace=$(NAME_SPACE)
+
+	####kubectl apply -f ./k8s_conf/ingress-ngx.yaml --namespace=$(NAME_SPACE)
 
 	helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
 	helm repo add secrets-store-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/secrets-store-csi-driver/master/charts
@@ -90,20 +92,28 @@ k8s-up:
 	kubectl apply -f https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer.yaml --namespace=$(NAME_SPACE)
 
 	##################VAULT ##############
-	az keyvault create --resource-group echo_claster2 --name echo-vault
-	az keyvault secret set \
-		--vault-name echo-vault2 \
-		--name SecretPassSecretKeyssword \
-		--value SuperHiddenString
+	#az keyvault create --resource-group echo_cluster2 --name echo-vault
+	#az keyvault secret set \
+	#	--vault-name echo-vault2 \
+	#	--name SecretPassSecretKeyssword \
+	#	--value SuperHiddenString
 	##Debug
-	az keyvault secret show --name "SecretPassSecretKeyssword" --vault-name "echo-vault2"
+	#az keyvault secret show --name "SecretPassSecretKeyssword" --vault-name "echo-vault2"
 	#####################################
 
+.PHONY:k8s-rm
 k8s-rm:
 	kubectl delete -f ./k8s_conf/namespace.yaml --namespace=$(NAME_SPACE)
-	#az keyvault delete --resource-group echo_claster --name echo-vault
+	#az keyvault delete --resource-group echo_cluster --name echo-vault
 	#az keyvault purge --name echo-vault
 
 
+.PHONY:requirements
+requirements:
+	# Add the ingress-nginx repository
+	# Use Helm to deploy an NGINX ingress controller
+	
+	
 
+	
 

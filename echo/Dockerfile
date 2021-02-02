@@ -1,3 +1,3 @@
 FROM scratch
-COPY ./echo_linux.so /echo_linux.so
+ADD . /
 ENTRYPOINT ["/echo_linux.so"]

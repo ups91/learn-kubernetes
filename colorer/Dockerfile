@@ -1,3 +1,3 @@
 FROM scratch
-COPY ./colorer_linux.so /colorer_linux.so
+ADD . /
 ENTRYPOINT ["/colorer_linux.so"]

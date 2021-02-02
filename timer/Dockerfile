@@ -1,3 +1,3 @@
 FROM scratch
-COPY ./timer_linux.so /timer_linux.so
+ADD . /
 ENTRYPOINT ["/timer_linux.so"]
