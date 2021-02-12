@@ -54,7 +54,7 @@ clean:
 .PHONY:k8s-up
 k8s-up:
 	kubectl apply -f ./k8s_conf/namespace.yaml
-
+	kubectl apply -f ./k8s_conf/azure-PVC.yaml
 	#
 	#find out Resource group
 	#az aks show --resource-group echo_cluster --name echo_cluster --query nodeResourceGroup -o tsv

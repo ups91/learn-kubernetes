@@ -24,31 +24,30 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	webappv1 "probe/own-controller/api/v1"
+	webappv1alpha1 "learn-kubernetes/own-controller/api/v1alpha1"
 )
 
-// GuestbookReconciler reconciles a Guestbook object
-type GuestbookReconciler struct {
+// ListPodReconciler reconciles a ListPod object
+type ListPodReconciler struct {
 	client.Client
 	Log    logr.Logger
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=webapp.echo.com,resources=guestbooks,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=webapp.echo.com,resources=guestbooks/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=webapp.begin,resources=listpods,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=webapp.begin,resources=listpods/status,verbs=get;update;patch
 
-func (r *GuestbookReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
+func (r *ListPodReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	_ = context.Background()
-	_ = r.Log.WithValues("guestbook", req.NamespacedName)
-	//	var ppp statefulset
+	_ = r.Log.WithValues("listpod", req.NamespacedName)
 
 	// your logic here
 
 	return ctrl.Result{}, nil
 }
 
-func (r *GuestbookReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *ListPodReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&webappv1.Guestbook{}).
+		For(&webappv1alpha1.ListPod{}).
 		Complete(r)
 }

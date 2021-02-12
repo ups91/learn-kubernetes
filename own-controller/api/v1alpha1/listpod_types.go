@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1
+package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -23,43 +23,41 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// GuestbookSpec defines the desired state of Guestbook
-type GuestbookSpec struct {
+// ListPodSpec defines the desired state of ListPod
+type ListPodSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	CountPerPage int `json:"count_per_page"` // number of some thing on page
-	// Foo is an example field of Guestbook. Edit Guestbook_types.go to remove/update
+
+	// Foo is an example field of ListPod. Edit ListPod_types.go to remove/update
 	Foo string `json:"foo,omitempty"`
 }
 
-// GuestbookStatus defines the observed state of Guestbook
-type GuestbookStatus struct {
-	StatusChanged bool `json:"switch,omitempty"` // dump field to switch on and off
-
+// ListPodStatus defines the observed state of ListPod
+type ListPodStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
 // +kubebuilder:object:root=true
 
-// Guestbook is the Schema for the guestbooks API
-type Guestbook struct {
+// ListPod is the Schema for the listpods API
+type ListPod struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   GuestbookSpec   `json:"spec,omitempty"`
-	Status GuestbookStatus `json:"status,omitempty"`
+	Spec   ListPodSpec   `json:"spec,omitempty"`
+	Status ListPodStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// GuestbookList contains a list of Guestbook
-type GuestbookList struct {
+// ListPodList contains a list of ListPod
+type ListPodList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Guestbook `json:"items"`
+	Items           []ListPod `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Guestbook{}, &GuestbookList{})
+	SchemeBuilder.Register(&ListPod{}, &ListPodList{})
 }

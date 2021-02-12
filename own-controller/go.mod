@@ -1,4 +1,4 @@
-module probe/own-controller
+module learn-kubernetes/own-controller
 
 go 1.13
 

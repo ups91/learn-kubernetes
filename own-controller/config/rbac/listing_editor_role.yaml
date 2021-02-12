@@ -1,15 +1,13 @@
-
----
+# permissions for end users to edit listings.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp: null
-  name: manager-role
+  name: listing-editor-role
 rules:
 - apiGroups:
   - webapp.begin
   resources:
-  - listpods
+  - listings
   verbs:
   - create
   - delete
@@ -21,8 +19,6 @@ rules:
 - apiGroups:
   - webapp.begin
   resources:
-  - listpods/status
+  - listings/status
   verbs:
   - get
-  - patch
-  - update

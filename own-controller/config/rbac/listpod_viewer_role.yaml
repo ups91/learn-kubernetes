@@ -1,20 +1,20 @@
-# permissions for end users to view guestbooks.
+# permissions for end users to view listpods.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: guestbook-viewer-role
+  name: listpod-viewer-role
 rules:
 - apiGroups:
-  - webapp.echo.com
+  - webapp.begin
   resources:
-  - guestbooks
+  - listpods
   verbs:
   - get
   - list
   - watch
 - apiGroups:
-  - webapp.echo.com
+  - webapp.begin
   resources:
-  - guestbooks/status
+  - listpods/status
   verbs:
   - get

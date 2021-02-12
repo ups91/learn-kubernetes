@@ -18,9 +18,16 @@ spec:
       labels:
         lbl: myColor
     spec:
+      volumes:
+        - name: d-azur
+          persistentVolumeClaim:
+            claimName: azure-managed-disk
       containers:
         - image: ups91/kube-test-pods:colorer
           imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: "/d"
+              name: d-azur
           name: colorer
           ports:
             - containerPort: 8003

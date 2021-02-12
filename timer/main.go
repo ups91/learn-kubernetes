@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+//nolint
+var LOG *os.File
 func main() {
 
 	http.HandleFunc("/shutdown", shutdown) // immediately exit
@@ -21,4 +23,5 @@ func shutdown(w http.ResponseWriter, r *http.Request) { os.Exit(1) }
 
 func sayTime(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, time.Now().String())
+	fmt.Fprintf(LOG, "Time: %s", time.Now().String() )
 }

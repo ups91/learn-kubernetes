@@ -1,7 +1,10 @@
-domain: echo.com
-repo: probe/own-controller
+domain: begin
+repo: learn-kubernetes/own-controller
 resources:
 - group: webapp
-  kind: Guestbook
-  version: v1
+  kind: Listing
+  version: v1alpha1
+- group: webapp
+  kind: ListPod
+  version: v1alpha1
 version: "2"

@@ -1,13 +1,13 @@
-# permissions for end users to edit guestbooks.
+# permissions for end users to edit listpods.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: guestbook-editor-role
+  name: listpod-editor-role
 rules:
 - apiGroups:
-  - webapp.echo.com
+  - webapp.begin
   resources:
-  - guestbooks
+  - listpods
   verbs:
   - create
   - delete
@@ -17,8 +17,8 @@ rules:
   - update
   - watch
 - apiGroups:
-  - webapp.echo.com
+  - webapp.begin
   resources:
-  - guestbooks/status
+  - listpods/status
   verbs:
   - get
