@@ -18,8 +18,10 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-logr/logr"
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -38,10 +40,20 @@ type ListPodReconciler struct {
 // +kubebuilder:rbac:groups=webapp.begin,resources=listpods/status,verbs=get;update;patch
 
 func (r *ListPodReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
-	_ = context.Background()
+	bkgcntx := context.Background()
 	_ = r.Log.WithValues("listpod", req.NamespacedName)
 
 	// your logic here
+	fmt.Println("############ Pod List Goes Next #####################")
+	//	_ = r.Log.WithValues("listpod", "############################################")
+	printMe := v1.PodList{}
+	if err := r.List(bkgcntx, &printMe); err == nil {
+		for _, i := range printMe.Items {
+			fmt.Println(i.ObjectMeta.Name)
+
+		}
+	}
+	fmt.Println("#####################################################")
 
 	return ctrl.Result{}, nil
 }
