@@ -1,7 +1,7 @@
 apiVersion: webapp.begin/v1alpha1
 kind: ListPod
 metadata:
-  name: listpod-sample-1
+  name: listpod-sample-2
 spec:
   # Add fields here
   foo: bar

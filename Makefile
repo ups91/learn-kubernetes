@@ -63,11 +63,6 @@ k8s-up:
 
 
 
-	#
-	## helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
-	## helm install csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --generate-name
-
-	kubectl apply -f ./k8s_conf/secret.yaml           --namespace=$(NAME_SPACE)
 	
 	kubectl apply -f ./k8s_conf/deploy-Set-Timer.yaml --namespace=$(NAME_SPACE)
 	kubectl apply -f ./k8s_conf/service-timer.yaml    --namespace=$(NAME_SPACE)
@@ -79,17 +74,6 @@ k8s-up:
 	kubectl apply -f ./k8s_conf/service-echo.yaml     --namespace=$(NAME_SPACE)
 
 
-
-
-	####kubectl apply -f ./k8s_conf/ingress-ngx.yaml --namespace=$(NAME_SPACE)
-
-	helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
-	helm repo add secrets-store-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/secrets-store-csi-driver/master/charts
-
-	#helm install csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --generate-name
-	#helm install csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver --generate-name
-	#
-	kubectl apply -f https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer.yaml --namespace=$(NAME_SPACE)
 
 	##################VAULT ##############
 	#az keyvault create --resource-group echo_cluster2 --name echo-vault
@@ -112,8 +96,27 @@ k8s-rm:
 requirements:
 	# Add the ingress-nginx repository
 	# Use Helm to deploy an NGINX ingress controller
+	kubectl apply -f ./k8s_conf/namespace-requirements.yaml
+	#
+	## helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
+	## helm install csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --generate-name
+
+	kubectl apply -f ./k8s_conf/secret.yaml           --namespace=echo-requirements
 	
-	
+
+	#helm install nginx-ing ingress-nginx/ingress-nginx --set rbac.create=true --namespace=echo-requirements
+	kubectl apply -f ./k8s_conf/ingress-ngx.yaml      --namespace=echo-requirements
+	#kubectl get validatingwebhookconfigurations  --all-namespaces
+	#kubectl delete validatingwebhookconfigurations nginx-ing-ingress-nginx-admission-NAME
+
+	helm repo add csi-secrets-store-provider-azure https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/charts
+	helm repo add secrets-store-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/secrets-store-csi-driver/master/charts
+
+	#helm install csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --generate-name
+	#helm install csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver --generate-name
+	#
+	kubectl apply -f https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/master/deployment/provider-azure-installer.yaml --namespace=$(NAME_SPACE)
+
 
 	
 

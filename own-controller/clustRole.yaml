@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: own-controller-system
+  name: own-user
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: view-all
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "nodes"]
+    verbs: ["get", "watch", "list"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: own-clusterrolebinding
+subjects:
+  - kind: ServiceAccount
+    name: own-user
+    namespace: own-controller-system
+roleRef:
+  kind: ClusterRole
+  name: view-all
+  apiGroup: rbac.authorization.k8s.io

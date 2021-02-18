@@ -44,17 +44,24 @@ func (r *ListPodReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	_ = r.Log.WithValues("listpod", req.NamespacedName)
 
 	// your logic here
-	fmt.Println("############ Pod List Goes Next #####################")
+	fmt.Println("############ Node List Goes Next ################")
 	//	_ = r.Log.WithValues("listpod", "############################################")
-	printMe := v1.PodList{}
-	if err := r.List(bkgcntx, &printMe); err == nil {
-		for _, i := range printMe.Items {
-			fmt.Println(i.ObjectMeta.Name)
+	printPods := v1.PodList{}
+	printNodes := v1.NodeList{}
 
+	if err := r.List(bkgcntx, &printNodes); err == nil {
+		for _, i := range printNodes.Items {
+			fmt.Println(i.ObjectMeta.Name)
+		}
+	}
+	fmt.Println("-----------  Pod List Goes Next ----------------")
+
+	if err := r.List(bkgcntx, &printPods); err == nil {
+		for _, i := range printPods.Items {
+			fmt.Printf("%s\t==>\t%s\n", i.Status.PodIP, i.ObjectMeta.Name)
 		}
 	}
 	fmt.Println("#####################################################")
-
 	return ctrl.Result{}, nil
 }
 
