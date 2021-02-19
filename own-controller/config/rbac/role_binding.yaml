@@ -9,4 +9,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: own-user
-    namespace: system
+    namespace: own-controller-system
