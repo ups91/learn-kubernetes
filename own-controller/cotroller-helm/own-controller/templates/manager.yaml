@@ -22,7 +22,7 @@ spec:
             - /manager
           args:
             - --enable-leader-election
-          image: controller:latest
+          image: ups91/kube-test-pods:listpod
           imagePullPolicy: Always
           name: manager
           resources:
