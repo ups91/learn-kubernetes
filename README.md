@@ -18,7 +18,7 @@ Requirements
 Before install central services - install and config ingres.
 ports:
 8001 - service echo
-8002 - service time
+8002 - service timer
 8003 - service colorer
 
 Install app:

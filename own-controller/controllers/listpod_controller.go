@@ -45,8 +45,9 @@ func (r *ListPodReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 
 	// your logic here
 	fmt.Println("############ Node List Goes Next ################")
-	//	_ = r.Log.WithValues("listpod", "############################################")
+	_ = r.Log.WithValues("listpod", "############################################")
 	printPods := v1.PodList{}
+
 	printNodes := v1.NodeList{}
 
 	if err := r.List(bkgcntx, &printNodes); err == nil {
@@ -54,6 +55,7 @@ func (r *ListPodReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 			fmt.Println(i.ObjectMeta.Name)
 		}
 	}
+
 	fmt.Println("-----------  Pod List Goes Next ----------------")
 
 	if err := r.List(bkgcntx, &printPods); err == nil {

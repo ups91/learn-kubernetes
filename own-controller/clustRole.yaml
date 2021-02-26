@@ -10,7 +10,7 @@ metadata:
   name: view-all
 rules:
   - apiGroups: [""]
-    resources: ["pods", "nodes", "configmaps"]
+    resources: ["pods", "nodes"]
     verbs: ["get", "watch", "list"]
 ---
 kind: ClusterRoleBinding
