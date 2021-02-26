@@ -1,54 +1,21 @@
-apiVersion: apiextensions.k8s.io/v1beta1
-kind: CustomResourceDefinition
-metadata:
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.2.5
-  creationTimestamp: null
-  name: listings.webapp.begin
-spec:
-  group: webapp.begin
-  names:
-    kind: Listing
-    listKind: ListingList
-    plural: listings
-    singular: listing
-  scope: Namespaced
-  validation:
-    openAPIV3Schema:
-      description: Listing is the Schema for the listings API
-      properties:
-        apiVersion:
-          description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-          type: string
-        kind:
-          description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-          type: string
-        metadata:
-          type: object
-        spec:
-          description: ListingSpec defines the desired state of Listing
-          properties:
-            foo:
-              description: Foo is an example field of Listing. Edit Listing_types.go to remove/update
-              type: string
-          type: object
-        status:
-          description: ListingStatus defines the observed state of Listing
-          type: object
-      type: object
-  version: v1alpha1
-  versions:
-  - name: v1alpha1
-    served: true
-    storage: true
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
+NAME: listpod-1
+LAST DEPLOYED: Fri Feb 26 10:25:53 2021
+NAMESPACE: echo-namespace
+STATUS: pending-install
+REVISION: 1
+TEST SUITE: None
+HOOKS:
+MANIFEST:
 ---
-apiVersion: apiextensions.k8s.io/v1beta1
+# Source: own-controller/templates/role_binding.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace:  echo-namespace
+  name: own-user
+---
+# Source: own-controller/templates/webapp.begin_listpods.yaml
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
@@ -68,10 +35,14 @@ spec:
       description: ListPod is the Schema for the listpods API
       properties:
         apiVersion:
-          description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
           type: string
         kind:
-          description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
           type: string
         metadata:
           type: object
@@ -79,7 +50,8 @@ spec:
           description: ListPodSpec defines the desired state of ListPod
           properties:
             foo:
-              description: Foo is an example field of ListPod. Edit ListPod_types.go to remove/update
+              description: Foo is an example field of ListPod. Edit ListPod_types.go
+                to remove/update
               type: string
           type: object
         status:
@@ -91,9 +63,163 @@ spec:
   - name: v1alpha1
     served: true
     storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                cronSpec:
+                  type: string
+                image:
+                  type: string
+                replicas:
+                  type: integer
 status:
   acceptedNames:
     kind: ""
     plural: ""
   conditions: []
   storedVersions: []
+---
+# Source: own-controller/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - webapp.begin
+  resources:
+  - listpods
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - webapp.begin
+  resources:
+  - listpods/status
+  verbs:
+  - get
+  - patch
+  - update
+---
+# Source: own-controller/templates/role_binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: manager-role
+subjects:
+  - kind: ServiceAccount
+    name:  own-user
+    namespace:  echo-namespace
+---
+# Source: own-controller/templates/leader_election_role.yaml
+# permissions to do leader election.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: leader-election-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - configmaps/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+---
+# Source: own-controller/templates/leader_election_role_binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: leader-election-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: leader-election-role
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: system
+---
+# Source: own-controller/templates/leader_election_role_binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: leader-election-own-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: leader-election-role
+subjects:
+  - kind: ServiceAccount
+    name: own-user
+    namespace:  echo-namespace
+---
+# Source: own-controller/templates/manager.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-manager
+  namespace: echo-namespace
+  labels:
+    control-plane: echo-namespace
+spec:
+  selector:
+    matchLabels:
+      control-plane: echo-namespace
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        control-plane: echo-namespace
+    spec:
+      serviceAccountName: own-user
+      containers:
+        - command:
+            - /manager
+          args:
+            - --enable-leader-election
+          image: controller:latest
+          imagePullPolicy: Always
+          name: manager
+          resources:
+            limits:
+              cpu: 100m
+              memory: 30Mi
+            requests:
+              cpu: 100m
+              memory: 20Mi
+      terminationGracePeriodSeconds: 10
+

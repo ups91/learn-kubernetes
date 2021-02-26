@@ -77,7 +77,7 @@ affinity: {}
 #  name: controller-manager
 #---
 namespace:
-  name: controller-manager
+  name: echo-namespace
 
 serviceAccountName:
   name: own-user
