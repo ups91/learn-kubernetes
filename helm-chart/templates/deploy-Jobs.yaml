@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-1g
+spec:
+  storageClassName: azurefile
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: disk-writer
+spec:
+  completions: 33
+  parallelism: 3
+  template:
+    metadata:
+      name: disk-writer
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: disk-writer-conteiner
+        image: ubuntu:latest
+        command: ['sh', '-c', 'date +%Y-%M-%d__%H-%M-%S>>/mnt/vol-1g/myDate.txt;cat /mnt/vol-1g/myDate.txt']
+        volumeMounts:
+            - mountPath: "/mnt/vol-1g"
+              name: volume-1g
+      volumes:
+          - name: volume-1g
+            persistentVolumeClaim:
+              claimName: pvc-1g
