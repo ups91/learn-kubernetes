@@ -18,6 +18,17 @@ spec:
       labels:
         lbl: myTime
     spec:
+      volumes:
+      - name: volume-1g
+        persistentVolumeClaim:
+          claimName: pvc-1g
+      initContainers:
+      - name: read-shared
+        image: alpine:latest
+        command: ['sh', '-c', 'sleep 22; cat /mnt/vol-1g/myDate.txt']
+        volumeMounts:
+            - mountPath: "/mnt/vol-1g"
+              name: volume-1g
       containers:
         - image:  ups91/kube-test-pods:timer
           imagePullPolicy: Always

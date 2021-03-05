@@ -11,6 +11,7 @@ Including, not but not limited to:
 - PVC
 - ingress
 - RBAC
+- jobs
 
 Tools: kubectl, helm.
 
@@ -22,5 +23,5 @@ ports:
 8003 - service colorer
 
 Install app:
-helm install http://git.....
+helm install echo-cluster https://github.com/ups91/learn-kubernetes/raw/main/echo-chart-0.1.0.tgz
 
