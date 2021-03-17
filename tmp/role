@@ -1,0 +1,32 @@
+role 
+
+ClusterRoleBinding
+serviceAcc
+
+crd
+deploy
+
+sample
+
+
+helm install listpod-1 \
+ --disable-openapi-validation  \
+  ./own-controller/ \
+ --atomic \
+ --create-namespace \
+ --namespace "echo-namespace" \
+  --description "Lists nodes and pods" \
+  --wait
+  
+
+
+
+
+  helm install listpod-1 \
+  ./own-controller/ \
+ --atomic \
+ --create-namespace \
+ --namespace "echo-namespace" \
+  --description "Lists nodes and pods" \
+  --wait
+  

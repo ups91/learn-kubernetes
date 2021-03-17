@@ -1,0 +1,16 @@
+#Build and push your image to the location specified by IMG:
+make docker-build docker-push IMG=ups91/kube-test-pods:listpod
+
+#Deploy the controller to the cluster with image specified by IMG:
+make deploy IMG=ups91/kube-test-pods:listpod
+
+
+
+
+
+
+
+
+
+
+
